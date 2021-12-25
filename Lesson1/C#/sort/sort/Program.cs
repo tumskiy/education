@@ -34,7 +34,7 @@
         int[] mas = new int [elemArr];
         for (int i = 0; i < mas.Length; i++)
         {
-            mas[i] = Int16.Parse(Console.ReadLine()); //преобразовавываем написанное с клавиатуры в 'int'
+            mas[i] = Int32.Parse(Console.ReadLine()); //преобразовавываем написанное с клавиатуры в 'int'
         }
         //сама сортировка с помощью метода 'bubblesort'
         bubblesort(mas);
