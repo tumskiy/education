@@ -32,7 +32,7 @@
         Console.WriteLine("Введите элемент массива (в 'int') для сортировки:");
 
         int[] mas = new int [elemArr];
-        for (int i = 0; i < mas.Length; i++)
+        for (  int i = 0; i < mas.Length; i++)
         {
             mas[i] = Convert.ToInt32(Console.ReadLine()); //преобразовавываем написанное с клавиатуры в 'int'
         }
