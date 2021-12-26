@@ -39,12 +39,10 @@
         //сама сортировка с помощью метода 'bubblesort'
         bubblesort(mas);
 
+
         Console.WriteLine("вывод массива после сортировки:");
-        for (int i = 0; i < mas.Length; i++)
-        {
-            Console.Write($"{mas[i]}, ",""); //выводим элементы массива через запятую
-        }        
-        Console.ReadLine();
+        Console.Write(String.Join("/", mas)); //выводим элементы массива через запятую
+
+    Console.ReadLine();
     }
 }
-
