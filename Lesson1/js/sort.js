@@ -1,7 +1,16 @@
-function insertionsort(mass)
+let array = [45,78,936,11];
+function insertionSort(arr)
 {
+  for (let i = 1; i<arr.length; i++) // цикл на длину массива
+  {    
+    let num = arr[i]; 
+    let j =i;      
+    if (j>0 && arr[j-1]>num)
+    {
+      arr[j] = arr[j-1];
+      j--;
+    }
+    arr[j] = num;
+  }
 };
-  
-  let array = [4584,48498,255,114,7478,48,69,4787,444,11];
-  
-  console.log(insertionsort(array));
+console.log(insertionSort(array.join(" ")));

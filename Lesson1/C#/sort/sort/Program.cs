@@ -1,12 +1,12 @@
 ﻿class Program
 {
-    static void swap(ref int elem1, ref int elem2) // создаем функцию сортировки с использованием третьего элемента
+    static void замена (ref int elem1, ref int elem2) // создаем функцию сортировки с использованием третьего элемента
     {
         var temp = elem1;
         elem1 = elem2;
         elem2 = temp;
     }
-    static int[] bubblesort(int[] arr) 
+    static int[] сортировОчка(int[] arr) 
     {
         var len = arr.Length; //длина массива
         for (var i = 1; i < len; i++) //цикл длины массива меньше i
@@ -15,7 +15,7 @@
             {
                 if (arr[j] > arr[j + 1]) //если элемент массива от j больше следующего элемента масства
                 {
-                    swap(ref arr[j], ref arr[j + 1]); //меняем их местами
+                    замена(ref arr[j], ref arr[j + 1]); //меняем их местами
                 }
             }
         }
@@ -37,9 +37,7 @@
             mas[i] = Convert.ToInt32(Console.ReadLine()); //преобразовавываем написанное с клавиатуры в 'int'
         }
         //сама сортировка с помощью метода 'bubblesort'
-        bubblesort(mas);
-
-
+        сортировОчка(mas);
         Console.WriteLine("вывод массива после сортировки:");
         Console.Write(String.Join("/", mas)); //выводим элементы массива через запятую
 
