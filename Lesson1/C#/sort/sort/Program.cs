@@ -1,28 +1,21 @@
 ﻿class Program
 {
-    static void swap(ref int elem1, ref int elem2) // создаем функцию сортировки с использованием третьего элемента
-    {
-        var temp = elem1;
-        elem1 = elem2;
-        elem2 = temp;
-    }
     static int[] bubblesort(int[] arr) 
     {
-        var len = arr.Length; //длина массива
-        for (var i = 1; i < len; i++) //цикл длины массива меньше i
+        for (int i = 0; i < arr.Length; i++)
         {
-            for (var j = 0; j < len - i; j++) //цикл длины массива меньше j
+            for (int j = 0; j < arr.Length - 1; j++)
             {
-                if (arr[j] > arr[j + 1]) //если элемент массива от j больше следующего элемента масства
+                if (arr[j] > arr[j + 1])
                 {
-                    swap(ref arr[j], ref arr[j + 1]); //меняем их местами
+                    var temp = arr[j + 1];
+                    arr[j + 1] = arr[j];
+                    arr[j] = temp;
                 }
             }
         }
-
-        return arr; //хз зачем ретурн, но без него не работает
+        return arr; 
     }
-
     //ввод массива с клавиатуры
     static void Main(string[] args)
     {   //пользователь задает количество эоементов массива
