@@ -1,17 +1,16 @@
 let array = [45,78,936,11,54,8,7984,15,996,32];
 function insertionSort(arr)
 {
-  for (let i = 1; i<arr.length; i++) // цикл на длину массива
+  for (let i = 1; i<arr.length; i++) // цикл на длину основного массива (1)
   {    
-    let num = arr[i]; 
-    let j = i-1;
-    while ((j+1>0) && arr[j]>num) 
+    let num = arr[i]; //текущий индекс цикла
+    let j = i-1; // индекс нового массива (2) равен предыдщему индексу основного масивва (1)
+    for (let next = j+1; (next >0 && arr[j]>num); j--) // тут while переделан в for. пока следующий элемент массива 2 юлдбше текущего, то смещаем его индекс на 1
     {
-      arr[j+1] = arr[j];
-      j--;
+      arr[j+1] = arr[j]; //следующтй элемент становится равен текущему
     }  
-    arr[j+1] = num  
+    arr[j+1] = num  //следующтй элемент становится равен текущему
   }
-  return arr;
+  return arr; //ретурн для использования переменной в будущем, а то не вызовется
 };
-console.log(insertionSort(array));
+console.log(insertionSort(array));//вывод
