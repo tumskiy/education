@@ -1,37 +1,38 @@
-function MergeSort (array)
+function MergeSort (array)//объявляем функцию
 {
-  if (array.length > 1)
+  if (array.length > 1) //если длина массива больше 1
   {
-    let mid = Math.floor(array.length/2)
-    let LeftHalf = array.slice(0, mid);
-    let RightHalf = array.slice(mid);
+    let mid = Math.floor(array.length/2) //середина
+    let LeftHalf = MergeSort(array.slice(0, mid)); // левая часть
+    let RightHalf = MergeSort(array.slice(mid)); // правая часть
 
-    MergeSort(LeftHalf);
-    MergeSort(RightHalf);
-
-    let leftIndex = 0;
+    let leftIndex = 0; // все три индекса по 0
     let rightIndex = 0;
     let index = 0;
-    while (leftIndex < LeftHalf.length && rightIndex < RightHalf.length)
+    while (leftIndex < LeftHalf.length && rightIndex < RightHalf.length) //пока левый индекс меньше длины левой половины и правый индекс меньше длины правой половины
     {
-      if (LeftHalf[leftIndex] < RightHalf[rightIndex])
+      if (LeftHalf[leftIndex] < RightHalf[rightIndex]) //если левый индекс левой половины меньше правого индекса правой половины
         {
-          array[index] = LeftHalf[leftIndex];
-          leftIndex++;
+          array[index] = LeftHalf[leftIndex]; //индекс ориг.масиивая становится равным левого индекса левого масиива
+          leftIndex++; //сдвигаеися
         }
       else
         {
-          array[index] = RightHalf[leftIndex];
+          array[index] = RightHalf[leftIndex]; //ну тут элс, все понтяно
           rightIndex++;
         }
         index++;
     }        
-    for(leftIndex < LeftHalf.length; (array[index] = LeftHalf[leftIndex]); leftIndex++)
+    while(leftIndex < LeftHalf.length) //пока индекс левого масиива меньше длины этого масиива
     {
+      array[index] = LeftHalf[leftIndex]; //индекс изначального масиива равен индексу левого масиива
+      leftIndex++;    
       index++;
     }
-    for(rightIndex < RightHalf.length; (array[index] = RightHalf[rightIndex]); rightIndex++)
+    while(rightIndex < RightHalf.length) // и наоборот
     {
+      array[index] = RightHalf[rightIndex]; 
+      rightIndex++;    
       index++;      
     }  
   }
