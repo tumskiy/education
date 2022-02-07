@@ -109,6 +109,10 @@ using (PreloadManager.Current.RegisterCache(() => new MeterPointGetEnergyValueCa
 					worksheet.Cells[stRow, col+6].Style.FillPattern.SetSolid(Color.FromArgb(0, 255, 200, 200));//красный
 				}
 			}
+			else {
+					worksheet.Cells[stRow, col+6].Value = "н/д";
+					worksheet.Cells[stRow, col+6].Style.FillPattern.SetSolid(Color.FromArgb(0, 255, 200, 200));//красный
+				}
 			
 			///_________ПОДСЧЕТ ДЕЛЬТЫ ПО А-______________________
 			var dataDeltaMinus = meterPoint.GetMeterPointFinalData(aminus, dInterval).ToArray();
@@ -133,6 +137,10 @@ using (PreloadManager.Current.RegisterCache(() => new MeterPointGetEnergyValueCa
 					worksheet.Cells[stRow, col+7].Style.FillPattern.SetSolid(Color.FromArgb(0, 255, 200, 200)); //Красный
 				}
 			}
+			else {
+					worksheet.Cells[stRow, col+7].Value = "н/д"; //нет данных
+					worksheet.Cells[stRow, col+7].Style.FillPattern.SetSolid(Color.FromArgb(0, 255, 200, 200)); //Красный
+				}
 			
 			
 			//словари 1 - А+, 2 - А-
@@ -184,6 +192,7 @@ using (PreloadManager.Current.RegisterCache(() => new MeterPointGetEnergyValueCa
 						}
 				}
 				
+			
 				// Коэффициент
 				var ratio = meterPoint.GetMeasureTransformersInfo();
 				var ktt = ratio == null ? 1.0 : ratio.VoltageRatio.GetValueOrDefault(1.0);
