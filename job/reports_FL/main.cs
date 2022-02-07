@@ -3,6 +3,7 @@ var worksheet = WorkbookNonExcel.Worksheets.FirstOrDefault();
 TariffZoneBasedParameter[] parameters=new TariffZoneBasedParameter[1];
 parameters[0]=TariffZoneBasedParameter.Instances.EnergyActiveForwardTotalFixDay;
 
+//параметры на начало суток
 var aplus = TariffZoneBasedParameter.Instances.EnergyActiveForwardTotalFixDay;
 var aminus = TariffZoneBasedParameter.Instances.EnergyActiveReverseTotalFixDay;
 
@@ -49,6 +50,7 @@ int stRow = 8; 	// начальная строка
 int indexNumber = 1;
 int col = 0;
 int j = 0;
+
 //using для ускорения работы
 using (PreloadManager.Current.RegisterCache(() => new MeterPointGetEnergyValueCache(mpList,prms,dInterval)))
 {	
@@ -84,27 +86,54 @@ using (PreloadManager.Current.RegisterCache(() => new MeterPointGetEnergyValueCa
 			//Дата установки
 			worksheet.Cells[stRow, col+5].Value = el.AttributeInstallDate;
 			
-			/*    В работе в данный момент
+			   
 			///_________ПОДСЧЕТ ДЕЛЬТЫ ПО А+______________________
-			var dataDeltaPlus = meterPoint.GetMeterPointFinalData(aplus, dInterval);
-			var startDataAplus = dataDeltaPlus.FirstOrDefault(x=>x.ValueDt != null && x.ValueDt == sd);
-			var endDataAplus = dataDeltaPlus.FirstOrDefault(x=>x.ValueDt != null && x.ValueDt == ed);
-			
-			//var deltaAplus = startDataAplus.Value - endDataAplus.Value;
-			worksheet.Cells[stRow, col+4+15].Value = startDataAplus.Value;
-			worksheet.Cells[stRow, col+4+16].Value = endDataAplus.Value;
+			var dataDeltaPlus = meterPoint.GetMeterPointFinalData(aplus, dInterval).ToArray();
+			if(dataDeltaPlus.Any())
+			{
+				var startDataAplus = dataDeltaPlus.FirstOrDefault(x=>x.ValueDt != null && x.ValueDt == sd);
+				var endDataAplus = dataDeltaPlus.FirstOrDefault(x=>x.ValueDt != null && x.ValueDt == ed);
+								
+				if (endDataAplus != null && startDataAplus != null) {
+					var delta = (endDataAplus.Value - startDataAplus.Value)/1000;//считаем значение
+					worksheet.Cells[stRow, col+6].Value = delta; //пишем в чейку
+				
+				//покрас ячеек
+					if (delta == 0)
+						worksheet.Cells[stRow, col+6].Style.FillPattern.SetSolid(Color.FromArgb(0, 255, 255, 200));//желтый
+					if (delta > 0)
+						worksheet.Cells[stRow, col+6].Style.FillPattern.SetSolid(Color.FromArgb(0, 200, 255, 200));//зеленый
+				}
+				else {
+					worksheet.Cells[stRow, col+6].Value = "н/д";
+					worksheet.Cells[stRow, col+6].Style.FillPattern.SetSolid(Color.FromArgb(0, 255, 200, 200));//красный
+				}
+			}
 			
 			///_________ПОДСЧЕТ ДЕЛЬТЫ ПО А-______________________
-			var dataDeltaMinus = meterPoint.GetMeterPointFinalData(aminus, dInterval);
-			var startDataAminus = dataDeltaMinus.FirstOrDefault(x=>x.ValueDt != null && x.ValueDt == sd);
-			var endDataAminus = dataDeltaMinus.FirstOrDefault(x=>x.ValueDt != null && x.ValueDt == ed);
+			var dataDeltaMinus = meterPoint.GetMeterPointFinalData(aminus, dInterval).ToArray();
+			if(dataDeltaMinus.Any())
+			{
+				var startDataAminus = dataDeltaMinus.FirstOrDefault(x=>x.ValueDt != null && x.ValueDt == sd);
+				var endDataAminus = dataDeltaMinus.FirstOrDefault(x=>x.ValueDt != null && x.ValueDt == ed);
+				
+				
+				if (endDataAminus != null && startDataAminus != null){ 
+					var delta = (endDataAminus.Value - startDataAminus.Value)/1000; //считаем значение
+					worksheet.Cells[stRow, col+7].Value = delta;	//пишем в чейку
+					
+					//покрас ячеек
+					if (delta == 0)
+						worksheet.Cells[stRow, col+7].Style.FillPattern.SetSolid(Color.FromArgb(0, 255, 255, 200));//желтый
+					if (delta > 0)
+						worksheet.Cells[stRow, col+7].Style.FillPattern.SetSolid(Color.FromArgb(0, 200, 255, 200));//Зеленый
+				}
+				else {
+					worksheet.Cells[stRow, col+7].Value = "н/д"; //нет данных
+					worksheet.Cells[stRow, col+7].Style.FillPattern.SetSolid(Color.FromArgb(0, 255, 200, 200)); //Красный
+				}
+			}
 			
-			//var deltaAminus = startDataAminus.Value - endDataAminus.Value;
-			//worksheet.Cells[stRow, col+5].Value = deltaAminus;
-			worksheet.Cells[stRow, col+4+15].Value = startDataAminus.Value;
-			worksheet.Cells[stRow, col+4+16].Value = endDataAminus.Value;
-			
-			*/
 			
 			//словари 1 - А+, 2 - А-
 			Dictionary <DateTime, Tuple <double?,double?,double?,double?>> dic=null; // <double?,double?,double?,double?> - здесь. 1элемент - началао суток, 2ой - тариф 1, 2-3й тариф и тд
@@ -122,17 +151,17 @@ using (PreloadManager.Current.RegisterCache(() => new MeterPointGetEnergyValueCa
 					foreach (var val in order_dic)
 						{
 							//заполнение даты
-							worksheet.Cells[stRow, col+5+4].SetValue(val.Key);
-							worksheet.Cells[stRow, col+5+4].Style.NumberFormat="dd.mm.yyyy hh:mm:ss";
+							worksheet.Cells[stRow, col+9].SetValue(val.Key);
+							worksheet.Cells[stRow, col+9].Style.NumberFormat="dd.mm.yyyy hh:mm:ss";
 							//проверка на null и заполнение ячеек
 							if(val.Value.Item1 != null)
-							worksheet.Cells[stRow, col+4+4].Value = val.Value.Item1.Value;
+							worksheet.Cells[stRow, col+8].Value = val.Value.Item1.Value;
 							if(val.Value.Item2 != null)
-							worksheet.Cells[stRow, col+6+4].Value = val.Value.Item2.Value;
+							worksheet.Cells[stRow, col+10].Value = val.Value.Item2.Value;
 							if(val.Value.Item3 != null)
-							worksheet.Cells[stRow, col+7+4].Value = val.Value.Item3.Value;
+							worksheet.Cells[stRow, col+11].Value = val.Value.Item3.Value;
 							if(val.Value.Item4 != null)
-							worksheet.Cells[stRow, col+8+4].Value = val.Value.Item4.Value;
+							worksheet.Cells[stRow, col+12].Value = val.Value.Item4.Value;
 							
 						}
 				}
@@ -144,13 +173,13 @@ using (PreloadManager.Current.RegisterCache(() => new MeterPointGetEnergyValueCa
 						{			
 							//проверка на null и заполнение ячеек
 							if(val.Value.Item1 != null)
-							worksheet.Cells[stRow, col+9+4].Value = val.Value.Item1.Value;
+							worksheet.Cells[stRow, col+13].Value = val.Value.Item1.Value;
 							if(val.Value.Item2 != null)
-							worksheet.Cells[stRow, col+10+4].Value = val.Value.Item2.Value;
+							worksheet.Cells[stRow, col+14].Value = val.Value.Item2.Value;
 							if(val.Value.Item3 != null)
-							worksheet.Cells[stRow, col+11+4].Value = val.Value.Item3.Value;
+							worksheet.Cells[stRow, col+15].Value = val.Value.Item3.Value;
 							if(val.Value.Item4 != null)
-							worksheet.Cells[stRow, col+12+4].Value = val.Value.Item4.Value;
+							worksheet.Cells[stRow, col+16].Value = val.Value.Item4.Value;
 							
 						}
 				}
@@ -159,7 +188,7 @@ using (PreloadManager.Current.RegisterCache(() => new MeterPointGetEnergyValueCa
 				var ratio = meterPoint.GetMeasureTransformersInfo();
 				var ktt = ratio == null ? 1.0 : ratio.VoltageRatio.GetValueOrDefault(1.0);
 				var ktn = ratio == null ? 1.0 : ratio.CurrentRatio.GetValueOrDefault(1.0);
-				worksheet.Cells[stRow, col+13+4].Value = (ktn+"/"+ktt);
+				worksheet.Cells[stRow, col+17].Value = (ktn+"/"+ktt);
 				
 				stRow++;
 				indexNumber++;
@@ -169,11 +198,8 @@ using (PreloadManager.Current.RegisterCache(() => new MeterPointGetEnergyValueCa
 	}
 }
 
-var dataCells = worksheet.Cells.GetSubrangeAbsolute(stRow-j,col,stRow-1,col+13);
+var dataCells = worksheet.Cells.GetSubrangeAbsolute(stRow-j,col,stRow-1,col+17);
 dataCells.SetBorder();	
 dataCells.Style.WrapText = true;
 dataCells.Style.VerticalAlignment = VerticalAlignmentStyle.Center;
 dataCells.Style.HorizontalAlignment = HorizontalAlignmentStyle.Center;
-
-	
-	
